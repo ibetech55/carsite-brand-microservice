@@ -1,0 +1,8 @@
+﻿**/bin
+**/output
+**/obj
+**/Properties
+**/appsettings.Development.json
+**/*.sln
+**/*.vs
+desktop.ini
