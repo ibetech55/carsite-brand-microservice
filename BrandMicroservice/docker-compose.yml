@@ -5,11 +5,12 @@ services:
    build:
     context: .
    ports:
-    - 7000:7000
+    - 5106:5106
   nginx:
     container_name: nginx
     image: nginx
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
     ports:
-      - "5106:5106"
+      - "443:443"
+      - "80:80"
