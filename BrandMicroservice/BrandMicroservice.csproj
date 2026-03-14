@@ -28,6 +28,7 @@
 
   <ItemGroup>
     <Folder Include="src\Data\Migrations\" />
+    <Folder Include="src\Models\Dtos\Forms\" />
   </ItemGroup>
 
 </Project>

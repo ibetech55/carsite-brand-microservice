@@ -6,8 +6,6 @@
 
         public required string Type { get; set; }
 
-        public required int LastModified { get; set; }
-
         public required int Size { get; set; }
     }
 }

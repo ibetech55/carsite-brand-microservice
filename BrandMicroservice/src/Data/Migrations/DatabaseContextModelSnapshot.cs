@@ -22,6 +22,66 @@ namespace BrandMicroservice.src.Data.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("BrandMicroservice.src.Models.DbModels.Form", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("_id");
+
+                    b.Property<string>("ControlName")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnName("control_name");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("FieldLabel")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnName("field_label");
+
+                    b.Property<string>("FieldType")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnName("field_type");
+
+                    b.Property<string>("FormDescription")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(1000)")
+                        .HasColumnName("form_description");
+
+                    b.Property<string>("FormName")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnName("form_name");
+
+                    b.Property<string>("FormType")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnName("form_type");
+
+                    b.Property<string>("HelpText")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("Multiple")
+                        .HasColumnType("BOOL")
+                        .HasColumnName("is_active");
+
+                    b.Property<string>("Source")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnName("source");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("forms", (string)null);
+                });
+
             modelBuilder.Entity("BrandMicroservice.src.Models.DbModels.Make", b =>
                 {
                     b.Property<Guid>("Id")
@@ -103,6 +163,10 @@ namespace BrandMicroservice.src.Data.Migrations
                         .HasColumnType("TIMESTAMPTZ")
                         .HasColumnName("date_created")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<DateTime?>("DateUpdated")
+                        .HasColumnType("TIMESTAMPTZ")
+                        .HasColumnName("date_updated");
 
                     b.Property<Guid>("MakeId")
                         .HasColumnType("uuid")

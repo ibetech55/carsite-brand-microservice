@@ -8,6 +8,8 @@ namespace BrandMicroservice.src.Data
         public DbSet<Make> Makes { get; set; }
         public DbSet<Model> Models { get; set; }
 
+        public DbSet<Form> Forms { get; set; }
+
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) 
         { }
 
@@ -42,6 +44,12 @@ namespace BrandMicroservice.src.Data
             model.Property(x => x.DateCreated).HasColumnName("date_created").HasColumnType("TIMESTAMPTZ").HasDefaultValueSql("CURRENT_TIMESTAMP");
             model.Property(x => x.DateUpdated).HasColumnName("date_updated").HasColumnType("TIMESTAMPTZ").IsRequired(false);
 
+            var form = modelBuilder.Entity<Form>();
+            form.ToTable("forms");
+            form.Property(x => x.Id).HasColumnName("_id");
+            form.Property(x => x.FormName).HasColumnName("form_name").HasColumnType("VARCHAR(100)").IsRequired();
+            form.Property(x => x.FormType).HasColumnName("form_type").HasColumnType("VARCHAR(100)").IsRequired();
+            form.Property(x => x.FormDescription).HasColumnName("form_description").HasColumnType("VARCHAR(1000)").IsRequired();
         }
     }
 }
