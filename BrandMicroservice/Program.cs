@@ -1,3 +1,4 @@
+
 using BrandMicroservice.src.Data;
 using BrandMicroservice.src.Mapping;
 using BrandMicroservice.src.Middlewares.GlobalException;
@@ -11,7 +12,7 @@ namespace BrandMicroservice
 {
     class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             // DotNetEnv.Env.Load();
             var builder = WebApplication.CreateBuilder(args);
@@ -47,10 +48,19 @@ namespace BrandMicroservice
 
             builder.Services.AddSwaggerGen();
 
+            if (builder.Environment.IsProduction())
+            {
+                // AWS SSM PARAMETER STORE
+                builder.Configuration.AddSystemsManager("/carsite/dev");
+            }
+
+
+
             builder.Services.AddDbContext<DatabaseContext>(options =>
             {
-                var dbString = builder.Configuration["Database"];
+                var dbString = builder.Configuration["BRAND_DATABASE"];
                 options.UseNpgsql(dbString);
+                Console.WriteLine($"Connected to DB on {dbString}");
             });
 
             var app = builder.Build();
