@@ -6,7 +6,7 @@
 
         public bool? Active { get; set; }
 
-        public string? BodyType { get; set; }
+        public List<string>? BodyType { get; set; }
 
         public int? YearFounded { get; set; }
     }

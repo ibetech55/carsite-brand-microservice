@@ -13,10 +13,8 @@ namespace BrandMicroservice
     {
         public static void Main(string[] args)
         {
-            DotNetEnv.Env.Load();
+            // DotNetEnv.Env.Load();
             var builder = WebApplication.CreateBuilder(args);
-
-            builder.Configuration.AddJsonFile("appsettings.json");
 
             builder.Services.AddCors(options =>
             {
@@ -34,6 +32,8 @@ namespace BrandMicroservice
 
             builder.Services.AddScoped<IMakeRepository, MakeRepository>();
             builder.Services.AddScoped<IModelRepository, ModelRepository>();
+            builder.Services.AddHttpClient();
+
 
             builder.Services.AddControllers().AddNewtonsoftJson(options =>
             {
@@ -59,21 +59,22 @@ namespace BrandMicroservice
 
             app.UseMiddleware<GlobalExcepetionMiddleware>();
 
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI(c =>
-                {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
-                    c.RoutePrefix = string.Empty;
-                });
-            }
+            //if (app.Environment.IsDevelopment())
+            //{
+            //    app.UseSwagger();
+            //    app.UseSwaggerUI(c =>
+            //    {
+            //        c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
+            //        c.RoutePrefix = string.Empty;
+            //    });
+            //}
 
-            //app.UseSwagger();
-            //app.UseSwaggerUI(c => {
-            //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
-            //    c.RoutePrefix = string.Empty;
-            //});
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
+                c.RoutePrefix = string.Empty;
+            });
 
             app.MapControllers();
 

@@ -59,14 +59,35 @@ namespace BrandMicroservice.src.Repository
             return res > 0 ? true : false;
         }
 
-        async public Task<Model?> FindModelByModelCodeAsync(string modelCode)
+        async public Task<ModelDto?> FindModelByModelCodeAsync(string modelCode)
         {
             try
             {
-                var res = await (from model in this._dbContext.Models
-                                 where model.ModelCode == modelCode
-                                 select model
-                                ).FirstOrDefaultAsync();
+                var res = await this._dbContext.Models
+                                    .Select(m => new ModelDto
+                                    {
+                                        Id = m.Id,
+                                        ModelName = m.ModelName,
+                                        ModelCode = m.ModelCode,
+                                        MakeId = m.MakeId,
+                                        Active = m.Active,
+                                        BodyType = m.BodyType,
+                                        YearFounded = m.YearFounded,
+                                        Make = new MakeDto
+                                        {
+                                            Id = m.Makes != null ? m.Makes.Id : Guid.Empty,
+                                            MakeName = m.Makes != null ? m.Makes.MakeName : "",
+                                            YearFounded = m.Makes != null ? m.Makes.YearFounded : 0,
+                                            Active = m.Makes != null ? m.Makes.Active : false,
+                                            Company = m.Makes != null ? m.Makes.Company : "",
+                                            Origin = m.Makes != null ? m.Makes.Origin : "",
+                                            MakeLogo = m.Makes != null ? m.Makes.MakeLogo : "",
+                                            MakeAbbreviation = m.Makes != null ? m.Makes.MakeAbbreviation : "",
+                                            MakeCode = m.Makes != null ? m.Makes.MakeCode : "",
+                                        }
+                                    })
+                                    .Where(m=>m.ModelCode == modelCode)
+                                    .FirstOrDefaultAsync();
                 return res;
             }
             catch (Exception ex) 
@@ -104,6 +125,7 @@ namespace BrandMicroservice.src.Repository
             var active = modelQuery.Active;
             var yearFounded = modelQuery.YearFounded;
             var bodyType = modelQuery.BodyType;
+            var makeCode = modelQuery.MakeCode;
 
             IQueryable<Model> query = this._dbContext.Models;
 
@@ -117,10 +139,10 @@ namespace BrandMicroservice.src.Repository
                 query = query.Where(m => EF.Functions.ILike(m.ModelCode, $"%{modelCode}%"));
             }
 
-            //if (!string.IsNullOrWhiteSpace(makeName))
-            //{
-            //    query = query.Where(m => EF.Functions.ILike(m.Makes.MakeName, $"%{makeName}%"));
-            //}
+            if (!string.IsNullOrWhiteSpace(makeName))
+            {
+                query = query.Where(m => m.Makes != null && EF.Functions.ILike(m.Makes.MakeName, $"%{makeName}%"));
+            }
 
             if (!string.IsNullOrWhiteSpace(active))
             {
@@ -138,11 +160,15 @@ namespace BrandMicroservice.src.Repository
                 query = query.Where(m => m.BodyType == bodyType);
             }
 
+            if (!string.IsNullOrWhiteSpace(makeCode))
+            {
+                query = query.Where(m => m.Makes != null && EF.Functions.ILike(m.Makes.MakeCode, $"%{makeCode}%"));
+            }
+
             var totalCount = query.Count();
 
             var res = await query
                     .Include(m => m.Makes)
-                    .OrderBy(m => m.ModelName)
                     .Select(m => new Model()
                     {
                         Id = m.Id,
@@ -154,6 +180,7 @@ namespace BrandMicroservice.src.Repository
                         ModelCode = m.ModelCode,
                         Makes = m.Makes
                     })
+                    .OrderBy(m => m.ModelName)
                     .Skip(skip)
                     .Take(limit)
                     .ToListAsync();
@@ -181,20 +208,44 @@ namespace BrandMicroservice.src.Repository
             };
         }
 
+        public async Task<List<ModelFilterDto>> GetModelFilterAsync(List<string> makes)
+        {
+            try
+            {
+                IQueryable<Model> query = this._dbContext.Models;
+                query = query.Where(c => c.Makes != null ? makes.Contains(c.Makes.MakeName) : false);
+
+                var res = await query
+                            .Select(m=>new ModelFilterDto
+                            { 
+                                ModelName = m.ModelName,
+                                MakeName = m.Makes!.MakeName,
+                                ModelCode = m.ModelCode,
+                                Total = 0
+                            })
+                            .OrderBy(c=>c.ModelName)
+                            .ToListAsync();
+
+                return res;
+                                       
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         public async Task<List<ModelByMakeNameList>> GetModelsByMakeName(string makeName)
         {
-            //var data = await (from model in this._dbContext.Models
-            //                  join make in this._dbContext.Makes on model.MakeId equals make.Id
-            //                  where make.MakeName == makeName
-            //                  orderby make.MakeName ascending
-            //                  select new ModelByMakeNameList { ModelCode = model.ModelCode, ModelName = model.ModelName }).ToListAsync();
 
             var res = await this._dbContext.Models
                 .Where(mo=>mo.Makes != null && mo.Makes.MakeName == makeName)
                 .Join(this._dbContext.Makes,
                 mo => mo.MakeId,
                 ma => ma.Id,
-                (mod, mak) => new ModelByMakeNameList { ModelCode = mod.ModelCode, ModelName = mod.ModelName })
+                (mod, mak) => new ModelByMakeNameList { ModelCode = mod.ModelCode, ModelName = mod.ModelName, BodyType = mod.BodyType })
+                .OrderBy(m => m.ModelName)
                 .ToListAsync();
 
             return res;

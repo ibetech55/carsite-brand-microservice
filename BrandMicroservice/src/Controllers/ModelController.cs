@@ -1,5 +1,6 @@
 ﻿using BrandMicroservice.src.Configs;
 using BrandMicroservice.src.Models.DbModels;
+using BrandMicroservice.src.Models.Dtos.MakeDTOs;
 using BrandMicroservice.src.Models.Dtos.Model;
 using BrandMicroservice.src.Models.Dtos.Shared;
 using BrandMicroservice.src.Services.Interface;
@@ -31,7 +32,7 @@ namespace BrandMicroservice.src.Controllers
         }
 
         [HttpGet("{modelCode}")]
-        public async Task<ActionResult<Model>> GetModelByModelCode(string modelCode)
+        public async Task<ActionResult<ModelDto>> GetModelByModelCode(string modelCode)
         {
             return Ok(await this._modelService.GetModelByModelCode(modelCode));
         }
@@ -89,6 +90,14 @@ namespace BrandMicroservice.src.Controllers
                 Constants.SPREADSHEET_FILE_TYPE,
                 "models_template.xlsx"
             );
+        }
+
+        [HttpGet("model-filters")]
+        public async Task<ActionResult<List<ModelFilterListDto>>> GetModelListFilter([FromQuery] List<string> makeName)
+        {
+            var res = await this._modelService.ModelListFilter(makeName);
+
+            return Ok(res);
         }
     }
 }

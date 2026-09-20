@@ -3,20 +3,17 @@ using System;
 using BrandMicroservice.src.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace BrandMicroservice.src.Data.Migrations
+namespace BrandMicroservice.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20251203104507_AddDateUpdatedToTable")]
-    partial class AddDateUpdatedToTable
+    partial class DatabaseContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,6 +21,33 @@ namespace BrandMicroservice.src.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("BrandMicroservice.src.Models.DbModels.Form", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("_id");
+
+                    b.Property<string>("FormDescription")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(1000)")
+                        .HasColumnName("form_description");
+
+                    b.Property<string>("FormName")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnName("form_name");
+
+                    b.Property<string>("FormType")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnName("form_type");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("forms", (string)null);
+                });
 
             modelBuilder.Entity("BrandMicroservice.src.Models.DbModels.Make", b =>
                 {
@@ -106,6 +130,10 @@ namespace BrandMicroservice.src.Data.Migrations
                         .HasColumnType("TIMESTAMPTZ")
                         .HasColumnName("date_created")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<DateTime?>("DateUpdated")
+                        .HasColumnType("TIMESTAMPTZ")
+                        .HasColumnName("date_updated");
 
                     b.Property<Guid>("MakeId")
                         .HasColumnType("uuid")

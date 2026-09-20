@@ -5,3 +5,5 @@
 **/.dockerignore
 **/appsettings.Development.json
 **/*.sln
+**/output
+**/.vs

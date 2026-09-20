@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: brand-ms-depl
+spec: #spec of deployment
+  replicas: 1
+  selector:
+    matchLabels:
+      app: brand-ms
+  template: 
+    metadata: 
+      name: brand-ms-pod
+      labels:
+        app: brand-ms
+    spec: # spec of pod
+      containers:
+        - name: brand-ms
+          image: pibewiro55/brand-ms:v6
+          env:
+            - name: Database
+              valueFrom:
+                secretKeyRef: 
+                  name: brand-ms-credentials
+                  key: postgres-url
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: brand-ms-srv
+spec:
+  type: NodePort
+  selector: 
+    app: brand-ms
+  ports:
+    - port: 5106
+      targetPort: 5106
+      nodePort: 30007
+

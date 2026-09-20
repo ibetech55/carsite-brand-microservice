@@ -1,0 +1,8 @@
+name: brand-ms
+services:
+  brand-ms:
+   container_name: brand-microservice
+   build:
+    context: .
+   ports:
+    - 5106:5106

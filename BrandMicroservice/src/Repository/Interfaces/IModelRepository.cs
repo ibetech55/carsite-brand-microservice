@@ -10,7 +10,7 @@ namespace BrandMicroservice.src.Repository.Interfaces
 
         Task<bool> CreateModelAsync(Model model);
 
-        Task<Model?> FindModelByModelCodeAsync(string modelCode);
+        Task<ModelDto?> FindModelByModelCodeAsync(string modelCode);
 
         Task<Model?> FindModelByModelName(string modelName);
 
@@ -23,5 +23,7 @@ namespace BrandMicroservice.src.Repository.Interfaces
         Task<bool> ActivateModelAsync(string modelCode);
 
         Task CreateMultipleModels(List<Model> models);
+
+        Task<List<ModelFilterDto>> GetModelFilterAsync(List<string> makes);
     }
 }

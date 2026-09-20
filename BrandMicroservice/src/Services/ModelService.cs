@@ -9,6 +9,7 @@ using BrandMicroservice.src.Services.Interface;
 using BrandMicroservice.src.Utils;
 using ClosedXML.Excel;
 using DocumentFormat.OpenXml.Spreadsheet;
+using System.Text.Json;
 
 namespace BrandMicroservice.src.Services
 {
@@ -17,11 +18,13 @@ namespace BrandMicroservice.src.Services
         private readonly IModelRepository _modelRepository;
         private readonly IMakeRepository _makeRepository;
         private readonly IMapper _Mapper;
-        public ModelService(IModelRepository modelRepository, IMakeRepository makeRepository, IMapper mapper)
+        private readonly HttpClient _HttpClient;
+        public ModelService(IModelRepository modelRepository, IMakeRepository makeRepository, IMapper mapper, HttpClient HttpClient)
         {
             this._modelRepository = modelRepository;
             this._makeRepository = makeRepository;
             this._Mapper = mapper;
+            this._HttpClient = HttpClient;
         }
         public async Task<bool> CreateModel(ModelRequestBody body)
         {
@@ -61,7 +64,7 @@ namespace BrandMicroservice.src.Services
             };
         }
 
-        public async Task<Model> GetModelByModelCode(string modelCode)
+        public async Task<ModelDto> GetModelByModelCode(string modelCode)
         {
             var res = await this._modelRepository.FindModelByModelCodeAsync(modelCode);
 
@@ -99,7 +102,7 @@ namespace BrandMicroservice.src.Services
             {
                 ModelName = body.ModelName ?? modelData.ModelName,
                 Active = body.Active != null ? body.Active.Value : modelData.Active,
-                BodyType = body.BodyType ?? modelData.BodyType,
+                BodyType = body.BodyType != null ? String.Join(",", body.BodyType) : modelData.BodyType,
                 YearFounded = body.YearFounded != null ? body.YearFounded.Value : modelData.YearFounded
             };
 
@@ -198,12 +201,15 @@ namespace BrandMicroservice.src.Services
 
                         if (modelData != null)
                         {
-                            throw new ArgumentException($"{modelName} already exists");
+                            if(modelData.Makes != null && modelData.Makes.MakeName == makeName)
+                            {
+                                throw new ArgumentException($"{modelName} already exists");
+                            }
                         }
 
                         var modelCode = String.Format($"{makeData.MakeAbbreviation}-{GenerateCode.Execute(5)}");
 
-                        var checkModelCode = this.GetModelByModelCode(modelCode);
+                        var checkModelCode = await this._modelRepository.FindModelByModelCodeAsync(modelCode);
 
                         if (checkModelCode != null)
                         {
@@ -216,7 +222,7 @@ namespace BrandMicroservice.src.Services
                             BodyType = bodyType,
                             YearFounded = yearFounded,
                             MakeId = makeData.Id,
-                            ModelCode = String.Format($"{makeData.MakeAbbreviation}-{GenerateCode.Execute(5)}"),
+                            ModelCode = modelCode,
                             Active = false
                         });
                     }
@@ -248,6 +254,69 @@ namespace BrandMicroservice.src.Services
                 }
 
             }
+        }
+
+        public async Task<List<ModelFilterListDto>> ModelListFilter(List<string> makeNames)
+        {
+           var result = await this._modelRepository.GetModelFilterAsync(makeNames);
+           HashSet<string> MakeNames = new HashSet<string>();
+            HashSet<string> ModelNames = new HashSet<string>();
+            var modelFilterListData = new List<ModelFilterListDto>();
+
+            MakeNames.UnionWith(result.Select(r => r.MakeName));
+            ModelNames.UnionWith(result.Select(r => r.ModelName));
+
+            var modelNameTotals = await this.GetModelNameTotal(ModelNames.ToList());
+
+
+            foreach (var makeName in MakeNames)
+            {
+                var modelFilterData = new List<ModelFilterDto>();
+
+                foreach (var res in result)
+                {
+                    if(res.MakeName == makeName)
+                    {
+                        var modelTotalData = modelNameTotals
+                            .Where(mnt=>mnt.ModelName == res.ModelName)
+                            .Select(mnt=>new ModelNameTotalDto { ModelName = mnt.ModelName, Total = mnt.Total})
+                            .FirstOrDefault();
+
+                        modelFilterData.Add(new ModelFilterDto
+                        {
+                            ModelCode = res.ModelCode,
+                            ModelName = res.ModelName,
+                            MakeName = res.MakeName,
+                            Total = modelTotalData != null ? modelTotalData.Total : 0
+                        });
+                    }
+                }
+
+                modelFilterListData.Add(
+                    new ModelFilterListDto
+                    {
+                        MakeName = makeName,
+                        ModelFilterData = modelFilterData
+                    }
+                );
+            }
+
+
+            return modelFilterListData.OrderBy(d=>d.MakeName).ToList();
+        }
+
+        private async Task<List<ModelNameTotalDto>> GetModelNameTotal(List<string> modelNames)
+        {
+            var query = string.Join("&", modelNames.Select(m => $"modelName={Uri.EscapeDataString(m)}"));
+
+            var response = await _HttpClient.GetAsync($"http://localhost:5131/api/car-microservice/model-name-total?{query}");
+
+            response.EnsureSuccessStatusCode();
+            var json = await response.Content.ReadAsStringAsync();
+
+            var data = JsonSerializer.Deserialize<List<ModelNameTotalDto>>(json);
+
+            return data!;
         }
     }
 }

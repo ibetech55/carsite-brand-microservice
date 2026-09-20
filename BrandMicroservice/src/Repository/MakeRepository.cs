@@ -4,7 +4,6 @@ using BrandMicroservice.src.Models.Dtos.Make;
 using BrandMicroservice.src.Models.Dtos.MakeDTOs;
 using BrandMicroservice.src.Models.Dtos.Shared;
 using BrandMicroservice.src.Repository.Interfaces;
-using DocumentFormat.OpenXml.Math;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
 
@@ -153,6 +152,7 @@ namespace BrandMicroservice.src.Repository
                 makeData.Company = updateData.Company;
                 makeData.Origin = updateData.Origin; 
                 makeData.DateUpdated = DateTime.UtcNow;
+                makeData.Active = updateData.Active;
 
                 this._dbContext.Update(makeData);
                 await this._dbContext.SaveChangesAsync();

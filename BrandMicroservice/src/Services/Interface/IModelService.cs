@@ -11,7 +11,7 @@ namespace BrandMicroservice.src.Services.Interface
 
         Task<bool> CreateModel(ModelRequestBody model);
 
-        Task<Model> GetModelByModelCode(string modelCode);
+        Task<ModelDto> GetModelByModelCode(string modelCode);
 
         Task<List<ModelByMakeNameList>> GetModelsByMakeName(string makeName);
 
@@ -22,6 +22,8 @@ namespace BrandMicroservice.src.Services.Interface
         Task<string> CreateMultipleModels(CreateMultipleModelsDto file);
 
         byte[] DownloadModelsTemplate();
+
+        Task<List<ModelFilterListDto>> ModelListFilter(List<string> makeNames);
 
     }
 }

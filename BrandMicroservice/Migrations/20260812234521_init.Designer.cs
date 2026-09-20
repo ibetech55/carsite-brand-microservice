@@ -3,17 +3,20 @@ using System;
 using BrandMicroservice.src.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace BrandMicroservice.src.Data.Migrations
+namespace BrandMicroservice.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20260812234521_init")]
+    partial class init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,24 +32,6 @@ namespace BrandMicroservice.src.Data.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("_id");
 
-                    b.Property<string>("ControlName")
-                        .IsRequired()
-                        .HasColumnType("VARCHAR(100)")
-                        .HasColumnName("control_name");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
-
-                    b.Property<string>("FieldLabel")
-                        .IsRequired()
-                        .HasColumnType("VARCHAR(100)")
-                        .HasColumnName("field_label");
-
-                    b.Property<string>("FieldType")
-                        .IsRequired()
-                        .HasColumnType("VARCHAR(100)")
-                        .HasColumnName("field_type");
-
                     b.Property<string>("FormDescription")
                         .IsRequired()
                         .HasColumnType("VARCHAR(1000)")
@@ -61,21 +46,6 @@ namespace BrandMicroservice.src.Data.Migrations
                         .IsRequired()
                         .HasColumnType("VARCHAR(100)")
                         .HasColumnName("form_type");
-
-                    b.Property<string>("HelpText")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("Multiple")
-                        .HasColumnType("BOOL")
-                        .HasColumnName("is_active");
-
-                    b.Property<string>("Source")
-                        .IsRequired()
-                        .HasColumnType("VARCHAR(100)")
-                        .HasColumnName("source");
 
                     b.HasKey("Id");
 

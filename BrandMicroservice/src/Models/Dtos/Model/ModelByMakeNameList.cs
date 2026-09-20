@@ -5,5 +5,7 @@
         public required string ModelName;
 
         public required string ModelCode;
+
+        public required string BodyType;
     }
 }

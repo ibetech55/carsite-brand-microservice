@@ -15,5 +15,7 @@ namespace BrandMicroservice.src.Models.Dtos.Model
         public string? BodyType { get; set; }
 
         public int? YearFounded { get; set; }
+
+        public string? MakeCode { get; set; }
     }
 }
