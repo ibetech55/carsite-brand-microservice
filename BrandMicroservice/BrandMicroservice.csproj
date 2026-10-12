@@ -1,36 +1,36 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Amazon.Extensions.Configuration.SystemsManager" Version="7.1.1" />
-    <PackageReference Include="AutoMapper" Version="16.0.0" />
-    <PackageReference Include="AWSSDK.SecretsManager" Version="4.0.100.14" />
-    <PackageReference Include="ClosedXML" Version="0.105.0" />
-    <PackageReference Include="DotNetEnv" Version="3.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="9.0.10" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.10" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.10">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.10" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.10">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.6" />
-    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.6.9" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Amazon.Extensions.Configuration.SystemsManager" Version="7.1.1" />
+		<PackageReference Include="AutoMapper" Version="16.0.0" />
+		<PackageReference Include="AWSSDK.SecretsManager" Version="4.0.100.14" />
+		<PackageReference Include="ClosedXML" Version="0.105.0" />
+		<PackageReference Include="DotNetEnv" Version="3.1.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="10.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.6" />
+		<PackageReference Include="System.Linq.Dynamic.Core" Version="1.6.9" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="src\Data\Migrations\" />
-    <Folder Include="src\Models\Dtos\Forms\" />
-  </ItemGroup>
+	<ItemGroup>
+		<Folder Include="src\Data\Migrations\" />
+		<Folder Include="src\Models\Dtos\Forms\" />
+	</ItemGroup>
 
 </Project>
