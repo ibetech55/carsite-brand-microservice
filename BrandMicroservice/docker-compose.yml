@@ -6,13 +6,3 @@ services:
     context: .
    ports:
     - 5106:5106
-  nginx:
-    container_name: nginx
-    image: nginx
-    volumes:
-      - ./nginx.dev.conf:/etc/nginx/nginx.conf
-      - /etc/letsencrypt:/etc/letsencrypt:ro      
-    ports:
-      - "5015:5015"
-      # - "443:443"
-      # - "80:80"
